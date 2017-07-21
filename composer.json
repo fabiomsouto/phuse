@@ -1,0 +1,21 @@
+{
+    "name": "fabiomsouto/phuse",
+    "description": "A no-frills fuse for PHP",
+    "type": "library",
+    "require": {
+      "ext-apc": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+      "psr-4": { "fabiomsouto\\phuse\\": "src" }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabio Souto",
+            "email": "fabiomsouto@gmail.com"
+        }
+    ]
+}
