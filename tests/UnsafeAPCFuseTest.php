@@ -31,13 +31,25 @@ class FuseObserver extends Assert implements SplObserver {
         self::assertEquals($subject->blown(), $this->assertionValue);
     }
 }
+
 /**
  * Class UnsafeAPCFuseTest
- * @covers UnsafeAPCFuse
  */
 class UnsafeAPCFuseTest extends TestCase {
     public function testCreateFuse() {
         $this->assertInstanceOf(UnsafeAPCFuse::class, new UnsafeAPCFuse("testFuse", 10, 100, 1000));
+    }
+
+    public function testGetters() {
+        $name = "testFuse";
+        $M = 10;
+        $R = 100;
+        $T = 1000;
+        $fuse = new UnsafeAPCFuse($name, $M, $T, $R);
+        $this->assertEquals($fuse->getName(), $name);
+        $this->assertEquals($fuse->getM(), $M);
+        $this->assertEquals($fuse->getR(), $R);
+        $this->assertEquals($fuse->getT(), $T);
     }
 
     public function testMeltFuse() {
@@ -86,7 +98,7 @@ class UnsafeAPCFuseTest extends TestCase {
         }
     }
 
-    public function testMeltEvent() {
+    public function testFuseMeltObserver() {
         $fuse = new UnsafeAPCFuse("testFuse", 10, 100, 5000);
         $observer = new FuseObserver(true);
         $fuse->attach($observer);
@@ -95,7 +107,7 @@ class UnsafeAPCFuseTest extends TestCase {
         }
     }
 
-    public function testResetEvent() {
+    public function testFuseResetObserver() {
         $fuse = new UnsafeAPCFuse("testFuse", 10, 100, 1000);
         $observer = new FuseObserver(false);
         for ($i = 0; $i < 11; $i++) {
@@ -104,6 +116,20 @@ class UnsafeAPCFuseTest extends TestCase {
         sleep(1);
         $fuse->attach($observer);
         $this->assertTrue($fuse->ok());
+    }
+
+    public function testFuseObserverAttachDetach() {
+        $fuse = new UnsafeAPCFuse("testFuse", 10, 100, 1000);
+        $observer = new FuseObserver(false);
+        $fuse->attach($observer);
+
+        // use reflection to read the private observer array
+        $reflector = new ReflectionObject($fuse);
+        $observers = $reflector->getProperty('observers');
+        $observers->setAccessible(true);
+        $this->assertTrue($observers->getValue($fuse)->contains($observer));
+        $fuse->detach($observer);
+        $this->assertFalse($observers->getValue($fuse)->contains($observer));
     }
 
     private function currentTimeMS() {
