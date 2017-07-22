@@ -14,6 +14,15 @@ $ composer require fabiomsouto/phuse
 
 This project follows [semantic versioning](http://semver.org).
 
+### 1.0.1
+[Added]
+- Unit test for attaching/dettaching observers.
+- Unit test for getters
+- This makes us have 100% unit test coverage for the only fuse we offer at the moment :)
+
+[Changed]
+- Internally, the observers are now stored in an SplObjectStorage object.
+
 ### 1.0.0
 [Added]
 - A Fuse is now an SplSubject too. This way you can attach SplObserver instances to it, and get notified when the fuse melts or restarts.
