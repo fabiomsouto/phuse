@@ -10,7 +10,7 @@ namespace fabiomsouto\phuse;
  * @author Fabio Souto <fabiomsouto@gmail.com>
  * @license MIT license
  */
-interface Fuse {
+interface Fuse extends \SplSubject {
 
     /**
      * Request the fuse to melt.

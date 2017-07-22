@@ -2,9 +2,26 @@
 This applications implements fuses for PHP. Right now it offers an APC-backed unsafe fuse.
 It is greatly inspired by [jlouis](https://github.com/jlouis)' implementation of fuses in erlang, which you can find [here](https://github.com/jlouis/fuse).
 
+## Installation
+
+Instalation is as simple as running
+
+```bash
+$ composer require fabiomsouto/phuse
+```
+
 ## Changelog
 
-This project follows [semantic versioning](semver.org).
+This project follows [semantic versioning](http://semver.org).
+
+### 1.0.0
+[Added]
+- A Fuse is now an SplSubject too. This way you can attach SplObserver instances to it, and get notified when the fuse melts or restarts.
+- Added a phpunit.xml specification, so you can run the unit tests in a breeze.
+
+[Changed]
+- A couple of links in the README.md weren't working, fixed those.
+- Added some assertions to some unit tests, for extra safety.
 
 ### 0.0.1
 [Added]
@@ -63,11 +80,44 @@ catch (Exception $e) {
     $fuse->melt();
 }
 ```
-You're signaling the fuse that something's wrong. If the fuse melts too many times in a certain time frame, it melts, and
+You're signaling the fuse that something's wrong. If the fuse melts too many times in a certain time frame, it blows, and
 stays that way until it cools down.
 
 ## How do I monitor the fuses?
-This will be available soon.
+Every fuse that inherits from the Fuse interface is also an SplSubject. As such, you can create a SplObserver and register
+it along the fuse. Each time the fuse blows or restarts, the Observer will be notified:
+
+```php
+class AFuseObserver implements SplObserver {
+    public function update(SplSubject $subject)
+    {
+        $blown = $subject->blown();
+        echo "This fuse is now ";
+        echo $blown? "blown\n" : "not blown\n";
+    }
+}
+
+...
+
+$M = 10;
+$T = 100;
+$R = 1000;
+$fuse = FuseBox::getUnsafeApcInstance("database", $M, $T, $R);
+$observer = new AFuseObserver();
+$fuse->attach($observer);
+
+// when the fuse melts you will see something in your terminal
+$fuse->melt();
+// outputs "This fuse is now blown" when the threshold is reached
+
+...
+// after 1000ms...
+$fuse->ok();
+// outputs "This fuse is now not blown" when the restart period ends
+```
+
+Keep in mind, notifying observers can take a long time. As such, keep the update call lean and make sure you're not registering
+a lot of observers in each fuse, as notifying all of them is an O(n) operation.
 
 ## Performance
 This will be available soon.
