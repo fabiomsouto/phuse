@@ -1,5 +1,6 @@
 <?php
 namespace fabiomsouto\phuse;
+use SplObserver;
 
 /**
  * UnsafeAPCFuse
@@ -21,6 +22,8 @@ class UnsafeAPCFuse implements Fuse
     private $T;
     // restart interval
     private $R;
+    // observers that are interested in the fuse events
+    private $observers;
 
     /**
      * UnsafeAPCFuse constructor.
@@ -36,6 +39,7 @@ class UnsafeAPCFuse implements Fuse
         $this->M = $M;
         $this->T = $T;
         $this->R = $R;
+        $this->observers = [];
     }
 
     /**
@@ -56,6 +60,7 @@ class UnsafeAPCFuse implements Fuse
         if ($intensity > $this->M) {
             // boom.
             $this->meltFuse($this->name, $this->R);
+            $this->notify();
         }
     }
 
@@ -82,6 +87,7 @@ class UnsafeAPCFuse implements Fuse
             if ($restart_time < $this->currentTimeMS()) {
                 $this->enableFuse($this->name);
                 $blown = false;
+                $this->notify();
             }
         }
 
@@ -200,5 +206,49 @@ class UnsafeAPCFuse implements Fuse
         apc_store("$name-state", "ok");
         apc_delete("$name-restart");
         $this->deleteMeltHistory($name);
+    }
+
+    /**
+     * Attach an SplObserver
+     * @link http://php.net/manual/en/splsubject.attach.php
+     * @param SplObserver $observer <p>
+     * The <b>SplObserver</b> to attach.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function attach(SplObserver $observer)
+    {
+        $this->observers[] = $observer;
+    }
+
+    /**
+     * Detach an observer
+     * @link http://php.net/manual/en/splsubject.detach.php
+     * @param SplObserver $observer <p>
+     * The <b>SplObserver</b> to detach.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function detach(SplObserver $observer)
+    {
+        $key = array_search($observer,$this->observers, true);
+        if($key){
+            unset($this->observers[$key]);
+        }
+    }
+
+    /**
+     * Notify an observer
+     * @link http://php.net/manual/en/splsubject.notify.php
+     * @return void
+     * @since 5.1.0
+     */
+    public function notify()
+    {
+        foreach($this->observers as $observer) {
+            $observer->update($this);
+        }
     }
 }
