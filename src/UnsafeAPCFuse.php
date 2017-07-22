@@ -39,7 +39,7 @@ class UnsafeAPCFuse implements Fuse
         $this->M = $M;
         $this->T = $T;
         $this->R = $R;
-        $this->observers = [];
+        $this->observers = new \SplObjectStorage();
     }
 
     /**
@@ -219,7 +219,7 @@ class UnsafeAPCFuse implements Fuse
      */
     public function attach(SplObserver $observer)
     {
-        $this->observers[] = $observer;
+        $this->observers->attach($observer);
     }
 
     /**
@@ -233,10 +233,7 @@ class UnsafeAPCFuse implements Fuse
      */
     public function detach(SplObserver $observer)
     {
-        $key = array_search($observer,$this->observers, true);
-        if($key){
-            unset($this->observers[$key]);
-        }
+        $this->observers->detach($observer);
     }
 
     /**

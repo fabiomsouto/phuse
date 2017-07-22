@@ -31,6 +31,7 @@ class FuseObserver extends Assert implements SplObserver {
         self::assertEquals($subject->blown(), $this->assertionValue);
     }
 }
+
 /**
  * Class UnsafeAPCFuseTest
  */
@@ -97,7 +98,7 @@ class UnsafeAPCFuseTest extends TestCase {
         }
     }
 
-    public function testMeltEvent() {
+    public function testFuseMeltObserver() {
         $fuse = new UnsafeAPCFuse("testFuse", 10, 100, 5000);
         $observer = new FuseObserver(true);
         $fuse->attach($observer);
@@ -106,7 +107,7 @@ class UnsafeAPCFuseTest extends TestCase {
         }
     }
 
-    public function testResetEvent() {
+    public function testFuseResetObserver() {
         $fuse = new UnsafeAPCFuse("testFuse", 10, 100, 1000);
         $observer = new FuseObserver(false);
         for ($i = 0; $i < 11; $i++) {
@@ -115,6 +116,20 @@ class UnsafeAPCFuseTest extends TestCase {
         sleep(1);
         $fuse->attach($observer);
         $this->assertTrue($fuse->ok());
+    }
+
+    public function testFuseObserverAttachDetach() {
+        $fuse = new UnsafeAPCFuse("testFuse", 10, 100, 1000);
+        $observer = new FuseObserver(false);
+        $fuse->attach($observer);
+
+        // use reflection to read the private observer array
+        $reflector = new ReflectionObject($fuse);
+        $observers = $reflector->getProperty('observers');
+        $observers->setAccessible(true);
+        $this->assertTrue($observers->getValue($fuse)->contains($observer));
+        $fuse->detach($observer);
+        $this->assertFalse($observers->getValue($fuse)->contains($observer));
     }
 
     private function currentTimeMS() {
