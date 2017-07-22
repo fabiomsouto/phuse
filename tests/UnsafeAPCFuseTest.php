@@ -33,11 +33,22 @@ class FuseObserver extends Assert implements SplObserver {
 }
 /**
  * Class UnsafeAPCFuseTest
- * @covers UnsafeAPCFuse
  */
 class UnsafeAPCFuseTest extends TestCase {
     public function testCreateFuse() {
         $this->assertInstanceOf(UnsafeAPCFuse::class, new UnsafeAPCFuse("testFuse", 10, 100, 1000));
+    }
+
+    public function testGetters() {
+        $name = "testFuse";
+        $M = 10;
+        $R = 100;
+        $T = 1000;
+        $fuse = new UnsafeAPCFuse($name, $M, $T, $R);
+        $this->assertEquals($fuse->getName(), $name);
+        $this->assertEquals($fuse->getM(), $M);
+        $this->assertEquals($fuse->getR(), $R);
+        $this->assertEquals($fuse->getT(), $T);
     }
 
     public function testMeltFuse() {
