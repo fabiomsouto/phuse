@@ -1,5 +1,7 @@
 <?php
+
 namespace fabiomsouto\phuse;
+
 use SplObserver;
 
 /**
@@ -44,7 +46,7 @@ class UnsafeAPCFuse implements Fuse
 
     /**
      * Request the fuse to melt.
-     * @return bool
+     * @return bool|void
      */
     public function melt()
     {
@@ -141,7 +143,7 @@ class UnsafeAPCFuse implements Fuse
 
     /**
      * Fetch the fuse melt history from APC.
-     * @param name
+     * @param $name
      * @return array
      */
     private function getMeltHistory($name) {
@@ -162,7 +164,7 @@ class UnsafeAPCFuse implements Fuse
 
     /**
      * Delete the fuse melt history in APC.
-     * @param name
+     * @param $name
      * @return array|bool
      */
     private function deleteMeltHistory($name) {
