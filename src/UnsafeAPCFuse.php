@@ -1,5 +1,7 @@
 <?php
+
 namespace fabiomsouto\phuse;
+
 use SplObserver;
 
 /**
@@ -44,7 +46,7 @@ class UnsafeAPCFuse implements Fuse
 
     /**
      * Request the fuse to melt.
-     * @return bool
+     * @return bool|void
      */
     public function melt()
     {
@@ -79,11 +81,11 @@ class UnsafeAPCFuse implements Fuse
     public function blown()
     {
         $key = "{$this->name}-state";
-        $blown = apc_fetch($key) === 'blown';
+        $blown = apcu_fetch($key) === 'blown';
 
         // is this fuse blown? if so, let's do some checks.
         if ($blown) {
-            $restart_time = apc_fetch("{$this->name}-restart");
+            $restart_time = apcu_fetch("{$this->name}-restart");
             if ($restart_time < $this->currentTimeMS()) {
                 $this->enableFuse($this->name);
                 $blown = false;
@@ -141,12 +143,12 @@ class UnsafeAPCFuse implements Fuse
 
     /**
      * Fetch the fuse melt history from APC.
-     * @param name
+     * @param $name
      * @return array
      */
     private function getMeltHistory($name) {
         $key = "$name-melt-history";
-        return apc_fetch($key) ?: [];
+        return apcu_fetch($key) ?: [];
     }
 
     /**
@@ -157,17 +159,17 @@ class UnsafeAPCFuse implements Fuse
      */
     private function saveMeltHistory($name, $melts) {
         $key = "$name-melt-history";
-        return apc_store($key, $melts);
+        return apcu_store($key, $melts);
     }
 
     /**
      * Delete the fuse melt history in APC.
-     * @param name
+     * @param $name
      * @return array|bool
      */
     private function deleteMeltHistory($name) {
         $key = "$name-melt-history";
-        return apc_delete($key);
+        return apcu_delete($key);
     }
 
     /**
@@ -194,8 +196,8 @@ class UnsafeAPCFuse implements Fuse
      * @param $restart
      */
     private function meltFuse($name, $restart) {
-        apc_store("$name-state", "blown");
-        apc_store("$name-restart", $this->currentTimeMS() + $restart);
+        apcu_store("$name-state", "blown");
+        apcu_store("$name-restart", $this->currentTimeMS() + $restart);
     }
 
     /**
@@ -203,8 +205,8 @@ class UnsafeAPCFuse implements Fuse
      * @param $name
      */
     private function enableFuse($name) {
-        apc_store("$name-state", "ok");
-        apc_delete("$name-restart");
+        apcu_store("$name-state", "ok");
+        apcu_delete("$name-restart");
         $this->deleteMeltHistory($name);
     }
 
