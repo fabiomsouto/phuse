@@ -14,6 +14,13 @@ $ composer require fabiomsouto/phuse
 
 This project follows [semantic versioning](http://semver.org).
 
+### 1.1.0
+[Added]
+- Compatibility with PHP7
+
+[Changed]
+- Improve phpdocs
+
 ### 1.0.1
 [Added]
 - Unit test for attaching/dettaching observers.
