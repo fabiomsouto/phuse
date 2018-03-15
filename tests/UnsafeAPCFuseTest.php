@@ -67,7 +67,7 @@ class UnsafeAPCFuseTest extends TestCase {
         }
         $this->assertTrue($fuse->blown());
         $this->assertFalse($fuse->ok());
-        sleep(1);
+        sleep(2);
         $this->assertFalse($fuse->blown());
         $this->assertTrue($fuse->ok());
     }
@@ -113,7 +113,7 @@ class UnsafeAPCFuseTest extends TestCase {
         for ($i = 0; $i < 11; $i++) {
             $fuse->melt();
         }
-        sleep(1);
+        sleep(2);
         $fuse->attach($observer);
         $this->assertTrue($fuse->ok());
     }

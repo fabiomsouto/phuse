@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "729b0c294928c93a52f21077e1d43c29",
+    "content-hash": "d8cf3cbf7fcc27823ed535b026148534",
     "packages": [
         {
             "name": "symfony/polyfill-apcu",
@@ -1389,8 +1389,6 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "ext-apc": "^4.0"
-    },
+    "platform": [],
     "platform-dev": []
 }

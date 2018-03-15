@@ -3,7 +3,6 @@
     "description": "A no-frills fuse for PHP",
     "type": "library",
     "require": {
-      "ext-apc": "^4.0",
       "symfony/polyfill-apcu": "^1.7.0"
     },
     "require-dev": {
@@ -11,6 +10,9 @@
     },
     "autoload": {
       "psr-4": { "fabiomsouto\\phuse\\": "src" }
+    },
+    "suggest": {
+        "ext-apc": "Needed for APC-backed fuses"
     },
     "license": "MIT",
     "authors": [
