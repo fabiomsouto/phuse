@@ -2,6 +2,8 @@
 This applications implements fuses for PHP. Right now it offers an APC-backed unsafe fuse.
 It is greatly inspired by [jlouis](https://github.com/jlouis)' implementation of fuses in erlang, which you can find [here](https://github.com/jlouis/fuse).
 
+[![Build Status](https://travis-ci.org/fabiomsouto/phuse.svg?branch=master)](https://travis-ci.org/fabiomsouto/phuse)
+
 ## Installation
 
 Instalation is as simple as running
