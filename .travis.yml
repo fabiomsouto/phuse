@@ -4,6 +4,7 @@ php:
   - '7.0'
   - '7.1'
   - '7.2'
+  - '7.3'
 before_install:
   - if [[ "$(php -v | grep 'PHP 5')" ]]; then yes | pecl install -f apcu-4.0.8; fi
   - if [[ "$(php -v | grep 'PHP 7')" ]]; then yes | pecl install -f apcu; fi
