@@ -1,7 +1,7 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Assert;
-
 use fabiomsouto\phuse\UnsafeAPCFuse;
 
 /**
