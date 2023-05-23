@@ -219,7 +219,7 @@ class UnsafeAPCFuse implements Fuse
      * @return void
      * @since 5.1.0
      */
-    public function attach(SplObserver $observer)
+    public function attach(SplObserver $observer): void
     {
         $this->observers->attach($observer);
     }
@@ -233,7 +233,7 @@ class UnsafeAPCFuse implements Fuse
      * @return void
      * @since 5.1.0
      */
-    public function detach(SplObserver $observer)
+    public function detach(SplObserver $observer): void
     {
         $this->observers->detach($observer);
     }
@@ -244,7 +244,7 @@ class UnsafeAPCFuse implements Fuse
      * @return void
      * @since 5.1.0
      */
-    public function notify()
+    public function notify(): void
     {
         foreach($this->observers as $observer) {
             $observer->update($this);
