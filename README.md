@@ -16,6 +16,10 @@ $ composer require fabiomsouto/phuse
 
 This project follows [semantic versioning](http://semver.org).
 
+### 2.0.0
+[Changed] 
+- Added the return types to class methods that override SplSubject methods to avoid E_DEPRECATED notices in php8.1, as the method signatures need to be equal to be considered compatible.
+
 ### 1.1.0
 [Added]
 - Compatibility with PHP7
